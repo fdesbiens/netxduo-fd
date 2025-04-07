@@ -178,7 +178,7 @@ extern   "C" {
 #define NX_WEB_HTTP_STATUS_CODE_SERVICE_UNAVAILABLE    0x3003E        /* "503 Service Unavailable"                            */
 #define NX_WEB_HTTP_STATUS_CODE_GATEWAY_TIMEOUT        0x3003F        /* "504 Gateway Time-out"                               */
 #define NX_WEB_HTTP_STATUS_CODE_VERSION_ERROR          0x30040        /* "505 HTTP Version not supported"                     */
-#define NX_WEB_HTTP_STATUS_CODE_TOO_MANY_REQUESTS      0x20041        /* "429 Too Many Requests"                              */
+#define NX_WEB_HTTP_STATUS_CODE_TOO_MANY_REQUESTS      0x30041        /* "429 Too Many Requests"                              */
 #define NX_WEB_HTTP_AUTHENTICATION_ERROR               NX_WEB_HTTP_STATUS_CODE_UNAUTHORIZED        /* HTTP client authentication failed                    */
 
 /* Define the HTTP Server TCP port number */
