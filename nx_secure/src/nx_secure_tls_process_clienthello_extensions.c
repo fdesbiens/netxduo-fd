@@ -1444,7 +1444,8 @@ NX_SECURE_TLS_PSK_STORE *psk_store;
     offset += 2;
 
     /* Make sure the length is reasonable. */
-    if(list_length > extension_length)
+    /* Account for extension_length including the 2-byte list_length field */
+    if(list_length > (extension_length - 2U))
     {
         return(NX_SECURE_TLS_INCORRECT_MESSAGE_LENGTH);
     }
