@@ -172,7 +172,7 @@ UINT status;
 
     if(hmac_method)
     {
-        status = hmac_method -> nx_crypto_cleanup(hmac_method);
+        status = hmac_method -> nx_crypto_cleanup(hkdf->nx_crypto_hmac_metadata);
 
         if (status != NX_CRYPTO_SUCCESS)
         {
