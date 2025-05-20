@@ -18587,6 +18587,20 @@ INT         buffer_length;
     buffer_length -= (INT)length;
 
     /**** Now we are positioned in front of the security parameters field.  ****/
+    if (buffer_length < 2)
+    {
+        /* Increment the invalid packet error counter.  */
+        agent_ptr -> nx_snmp_agent_invalid_packets++;
+
+        /* Increment the internal error counter.  */
+        agent_ptr -> nx_snmp_agent_internal_errors++;
+
+        /* Release the packet.  */
+        nx_packet_release(packet_ptr);
+
+        /* Return to caller.  */
+        return;
+    }
 
     /* Determine if there are security parameters.  */
     if ((buffer_ptr[0] == NX_SNMP_ANS1_OCTET_STRING) && (buffer_ptr[1]))
