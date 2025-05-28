@@ -280,6 +280,12 @@ USHORT                                no_extension = NX_FALSE;
         length += session_id_length;
     }
 
+    /* GHSA-5vrv-8j5h-h6h6 2504xx */
+    if ((length + 1) >= message_length)
+    {
+        return(NX_SECURE_TLS_INCORRECT_MESSAGE_LENGTH);
+    }
+  
     /* Negotiate the ciphersuite we want to use. */
     ciphersuite_list_length = (USHORT)((packet_buffer[length] << 8) + packet_buffer[length + 1]);
     length += 2;
@@ -294,6 +300,12 @@ USHORT                                no_extension = NX_FALSE;
 
     length += ciphersuite_list_length;
 
+    /* GHSA-5vrv-8j5h-h6h6 2504xx */
+    if (length >= message_length)
+    {
+        return(NX_SECURE_TLS_INCORRECT_MESSAGE_LENGTH);
+    }
+  
     /* Compression methods length - one byte. For now we only support the NULL method. */
     compression_methods_length = packet_buffer[length];
     length++;
