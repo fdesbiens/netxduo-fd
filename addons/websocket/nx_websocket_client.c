@@ -361,8 +361,7 @@ UINT        status;
     if ((client_ptr == NX_NULL) || (client_ptr -> nx_websocket_client_id != NX_WEBSOCKET_CLIENT_ID) || 
         (socket_ptr == NX_NULL) || (socket_ptr -> nx_tcp_socket_id != NX_TCP_ID) ||
         (host == NX_NULL) || (host_length == 0) || 
-        (uri_path == NX_NULL) || (uri_path_length == 0) ||
-        (protocol == NX_NULL) || (protocol_length == 0))
+        (uri_path == NX_NULL) || (uri_path_length == 0))
     {
         return(NX_PTR_ERROR);
     }
@@ -630,12 +629,15 @@ NX_PACKET *packet_ptr;
     status += nx_packet_data_append(packet_ptr, client_ptr -> nx_websocket_client_key, client_ptr -> nx_websocket_client_key_size, client_ptr -> nx_websocket_client_packet_pool_ptr, wait_option);
     status += nx_packet_data_append(packet_ptr, NX_WEBSOCKET_CRLF, NX_WEBSOCKET_CRLF_SIZE, client_ptr -> nx_websocket_client_packet_pool_ptr, wait_option);
 
-    /* Place the connection in the header.  */
-    status += nx_packet_data_append(packet_ptr, "Sec-WebSocket-Protocol: ", sizeof("Sec-WebSocket-Protocol: ") - 1, client_ptr -> nx_websocket_client_packet_pool_ptr, wait_option);
-    status += nx_packet_data_append(packet_ptr, protocol, protocol_length, client_ptr -> nx_websocket_client_packet_pool_ptr, wait_option);
-    status += nx_packet_data_append(packet_ptr, NX_WEBSOCKET_CRLF, NX_WEBSOCKET_CRLF_SIZE, client_ptr -> nx_websocket_client_packet_pool_ptr, wait_option);
+    /* Place the Sec-WebSocket-Protocol in the header.  */
+    if ((protocol != NX_NULL) && (protocol_length != 0))
+    {
+        status += nx_packet_data_append(packet_ptr, "Sec-WebSocket-Protocol: ", sizeof("Sec-WebSocket-Protocol: ") - 1, client_ptr -> nx_websocket_client_packet_pool_ptr, wait_option);
+        status += nx_packet_data_append(packet_ptr, protocol, protocol_length, client_ptr -> nx_websocket_client_packet_pool_ptr, wait_option);
+        status += nx_packet_data_append(packet_ptr, NX_WEBSOCKET_CRLF, NX_WEBSOCKET_CRLF_SIZE, client_ptr -> nx_websocket_client_packet_pool_ptr, wait_option);
+    }
 
-    /* Place the connection in the header.  */
+    /* Place the Sec-WebSocket-Version in the header.  */
     status += nx_packet_data_append(packet_ptr, "Sec-WebSocket-Version: 13", sizeof("Sec-WebSocket-Version: 13") - 1, client_ptr -> nx_websocket_client_packet_pool_ptr, wait_option);
     status += nx_packet_data_append(packet_ptr, NX_WEBSOCKET_CRLF, NX_WEBSOCKET_CRLF_SIZE, client_ptr -> nx_websocket_client_packet_pool_ptr, wait_option);
 
@@ -766,8 +768,7 @@ UINT        status;
     if ((client_ptr == NX_NULL) || (client_ptr -> nx_websocket_client_id != NX_WEBSOCKET_CLIENT_ID) || 
         (tls_session == NX_NULL) ||
         (host == NX_NULL) || (host_length == 0) || 
-        (uri_path == NX_NULL) || (uri_path_length == 0) ||
-        (protocol == NX_NULL) || (protocol_length == 0))
+        (uri_path == NX_NULL) || (uri_path_length == 0))
     {
         return(NX_PTR_ERROR);
     }
@@ -919,7 +920,8 @@ UINT  _nx_websocket_client_name_compare(UCHAR *src, ULONG src_length, UCHAR *des
 UCHAR   ch;
 
     /* Compare the length. */
-    if(src_length != dest_length)
+    if((src_length != dest_length) ||
+       (src == NX_NULL) || (dest == NX_NULL))
     {
         return(NX_WEBSOCKET_ERROR);
     }
@@ -1009,7 +1011,6 @@ UCHAR   key[NX_WEBSOCKET_ACCEPT_KEY_SIZE + 1];
 UINT    key_size = 0;
 UCHAR   upgrade_flag = NX_FALSE;
 UCHAR   connection_flag = NX_FALSE;
-UCHAR   protocol_cnt = 0;
 UCHAR   accept_cnt = 0;
 
     NX_PARAMETER_NOT_USED(client_ptr);
@@ -1135,8 +1136,6 @@ UCHAR   accept_cnt = 0;
             {
                 return(NX_WEBSOCKET_INVALID_PACKET);
             }
-
-            protocol_cnt++;
         }
         else if (_nx_websocket_client_name_compare((UCHAR *)field_name, field_name_length, (UCHAR *)"Sec-WebSocket-Accept", sizeof("Sec-WebSocket-Accept") - 1) == NX_SUCCESS)
         {
@@ -1162,8 +1161,8 @@ UCHAR   accept_cnt = 0;
     /* Check if the all fields are processed and found as required.  */
     if ((offset != packet_ptr -> nx_packet_length) ||
         (upgrade_flag != NX_TRUE) || (connection_flag != NX_TRUE) ||
-        (protocol_cnt != 1) || (accept_cnt != 1)) /* Both sec-websocket-protocol field and sec-websocket-accept field are allowed occur once only.
-                                                     Reference in RFC 6455, Section 11.3.3 and 11.3.4, Page 59-60 */
+        (accept_cnt != 1)) /* Sec-WebSocket-Accept field is allowed occur once only.
+                              Reference in RFC 6455, Section 11.3.3 and 11.3.4, Page 59-60 */
     {
         return(NX_WEBSOCKET_INVALID_PACKET);
     }
