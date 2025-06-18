@@ -327,6 +327,8 @@ UINT  _nx_websocket_client_delete(NX_WEBSOCKET_CLIENT *client_ptr)
 /*    uri_path_length                       Length of uri path            */
 /*    protocol                              Pointer to protocol           */ 
 /*    protocol_length                       Length of protocol            */
+/*    bearer                                Pointer to bearer             */ 
+/*    bearer_length                         Length of bearer              */
 /*    wait_option                           Wait option                   */ 
 /*                                                                        */
 /*  OUTPUT                                                                */
@@ -351,7 +353,8 @@ UINT  _nx_websocket_client_delete(NX_WEBSOCKET_CLIENT *client_ptr)
 UINT  _nxe_websocket_client_connect(NX_WEBSOCKET_CLIENT *client_ptr, NX_TCP_SOCKET *socket_ptr,
                                     UCHAR *host, UINT host_length,
                                     UCHAR *uri_path, UINT uri_path_length,
-                                    UCHAR *protocol, UINT protocol_length,UINT wait_option)
+                                    UCHAR *protocol, UINT protocol_length,
+                                    UCHAR *bearer, UINT bearer_length, UINT wait_option)
 {
 
 UINT        status;
@@ -367,7 +370,7 @@ UINT        status;
     }
 
     /* Call actual connect function.  */
-    status = _nx_websocket_client_connect(client_ptr, socket_ptr, host, host_length, uri_path, uri_path_length, protocol, protocol_length, wait_option);
+    status = _nx_websocket_client_connect(client_ptr, socket_ptr, host, host_length, uri_path, uri_path_length, protocol, protocol_length, bearer, bearer_length, wait_option);
 
     /* Return completion status.  */
     return(status);
@@ -399,6 +402,8 @@ UINT        status;
 /*    uri_path_length                       Length of uri path            */
 /*    protocol                              Pointer to protocol           */ 
 /*    protocol_length                       Length of protocol            */
+/*    bearer                                Pointer to bearer             */ 
+/*    bearer_length                         Length of bearer              */
 /*    wait_option                           Wait option                   */
 /*                                                                        */
 /*  OUTPUT                                                                */
@@ -423,7 +428,8 @@ UINT        status;
 UINT  _nx_websocket_client_connect(NX_WEBSOCKET_CLIENT *client_ptr, NX_TCP_SOCKET *socket_ptr,
                                    UCHAR *host, UINT host_length,
                                    UCHAR *resource, UINT resource_length,
-                                   UCHAR *protocol, UINT protocol_length,UINT wait_option)
+                                   UCHAR *protocol, UINT protocol_length,
+                                   UCHAR *bearer, UINT bearer_length, UINT wait_option)
 {
 
 UINT status;
@@ -462,7 +468,7 @@ UINT status;
     client_ptr -> nx_websocket_client_use_tls = NX_FALSE;
 #endif /* NX_SECURE_ENABLE */
 
-    status = _nx_websocket_client_connect_internal(client_ptr, host, host_length, resource, resource_length, protocol, protocol_length, wait_option);
+    status = _nx_websocket_client_connect_internal(client_ptr, host, host_length, resource, resource_length, protocol, protocol_length, bearer, bearer_length,  wait_option);
 
     /* Release the mutex and return */
     tx_mutex_put(&(client_ptr -> nx_websocket_client_mutex));
@@ -493,6 +499,8 @@ UINT status;
 /*    uri_path_length                       Length of uri path            */
 /*    protocol                              Pointer to protocol           */ 
 /*    protocol_length                       Length of protocol            */
+/*    bearer                                Pointer to bearer             */ 
+/*    bearer_length                         Length of bearer              */
 /*    wait_option                           Wait option                   */
 /*                                                                        */
 /*  OUTPUT                                                                */
@@ -528,7 +536,8 @@ UINT status;
 UINT  _nx_websocket_client_connect_internal(NX_WEBSOCKET_CLIENT *client_ptr,
                                             UCHAR *host, UINT host_length,
                                             UCHAR *uri_path, UINT uri_path_length,
-                                            UCHAR *protocol, UINT protocol_length,UINT wait_option)
+                                            UCHAR *protocol, UINT protocol_length,
+                                            UCHAR *bearer, UINT bearer_length, UINT wait_option)
 {
 
 UINT i;
@@ -641,6 +650,14 @@ NX_PACKET *packet_ptr;
     status += nx_packet_data_append(packet_ptr, "Sec-WebSocket-Version: 13", sizeof("Sec-WebSocket-Version: 13") - 1, client_ptr -> nx_websocket_client_packet_pool_ptr, wait_option);
     status += nx_packet_data_append(packet_ptr, NX_WEBSOCKET_CRLF, NX_WEBSOCKET_CRLF_SIZE, client_ptr -> nx_websocket_client_packet_pool_ptr, wait_option);
 
+    /* Place the Bearer in the header.  */
+    if ((bearer != NX_NULL) && (bearer_length != 0))
+    {
+        status += nx_packet_data_append(packet_ptr, "Authorization: Bearer ", sizeof("Authorization: Bearer ") - 1, client_ptr -> nx_websocket_client_packet_pool_ptr, wait_option);
+        status += nx_packet_data_append(packet_ptr, bearer, bearer_length, client_ptr -> nx_websocket_client_packet_pool_ptr, wait_option);
+        status += nx_packet_data_append(packet_ptr, NX_WEBSOCKET_CRLF, NX_WEBSOCKET_CRLF_SIZE, client_ptr -> nx_websocket_client_packet_pool_ptr, wait_option);
+    }
+
     /* Fill the last \r\n.  */
     status += nx_packet_data_append(packet_ptr, NX_WEBSOCKET_CRLF, NX_WEBSOCKET_CRLF_SIZE, client_ptr -> nx_websocket_client_packet_pool_ptr, wait_option);
 
@@ -734,6 +751,8 @@ NX_PACKET *packet_ptr;
 /*    uri_path_length                       Length of uri path            */
 /*    protocol                              Pointer to protocol           */ 
 /*    protocol_length                       Length of protocol            */
+/*    bearer                                Pointer to bearer             */ 
+/*    bearer_length                         Length of bearer              */
 /*    wait_option                           Wait option                   */ 
 /*                                                                        */
 /*  OUTPUT                                                                */
@@ -758,7 +777,8 @@ NX_PACKET *packet_ptr;
 UINT  _nxe_websocket_client_secure_connect(NX_WEBSOCKET_CLIENT *client_ptr, NX_SECURE_TLS_SESSION *tls_session,
                                            UCHAR *host, UINT host_length,
                                            UCHAR *uri_path, UINT uri_path_length,
-                                           UCHAR *protocol, UINT protocol_length,UINT wait_option)
+                                           UCHAR *protocol, UINT protocol_length,
+                                           UCHAR *bearer, UINT bearer_length, UINT wait_option)
 {
 
 UINT        status;
@@ -774,7 +794,7 @@ UINT        status;
     }
 
     /* Call actual secure connect function.  */
-    status = _nx_websocket_client_secure_connect(client_ptr, tls_session, host, host_length, uri_path, uri_path_length, protocol, protocol_length, wait_option);
+    status = _nx_websocket_client_secure_connect(client_ptr, tls_session, host, host_length, uri_path, uri_path_length, protocol, protocol_length, bearer, bearer_length, wait_option);
 
     /* Return completion status.  */
     return(status);
@@ -806,6 +826,8 @@ UINT        status;
 /*    uri_path_length                       Length of uri path            */
 /*    protocol                              Pointer to protocol           */ 
 /*    protocol_length                       Length of protocol            */
+/*    bearer                                Pointer to bearer             */ 
+/*    bearer_length                         Length of bearer              */
 /*    wait_option                           Wait option                   */
 /*                                                                        */
 /*  OUTPUT                                                                */
@@ -830,7 +852,8 @@ UINT        status;
 UINT  _nx_websocket_client_secure_connect(NX_WEBSOCKET_CLIENT *client_ptr, NX_SECURE_TLS_SESSION *tls_session,
                                           UCHAR *host, UINT host_length,
                                           UCHAR *uri_path, UINT uri_path_length,
-                                          UCHAR *protocol, UINT protocol_length,UINT wait_option)
+                                          UCHAR *protocol, UINT protocol_length,
+                                          UCHAR *bearer, UINT bearer_length, UINT wait_option)
 {
 
 UINT status;
@@ -866,7 +889,7 @@ UINT status;
     client_ptr -> nx_websocket_client_tls_session_ptr = tls_session;
     client_ptr -> nx_websocket_client_use_tls = NX_TRUE;
 
-    status = _nx_websocket_client_connect_internal(client_ptr, host, host_length, uri_path, uri_path_length, protocol, protocol_length, wait_option);
+    status = _nx_websocket_client_connect_internal(client_ptr, host, host_length, uri_path, uri_path_length, protocol, protocol_length, bearer, bearer_length, wait_option);
 
     /* Release the mutex and return */
     tx_mutex_put(&(client_ptr -> nx_websocket_client_mutex));
