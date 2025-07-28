@@ -372,7 +372,7 @@ extern const NX_SECURE_TLS_CRYPTO nx_crypto_tls_ciphers;
 #define TOTAL_SECTORS 256
 #define SECTOR_SIZE 512
 static UCHAR media_memory[4096];
-static CHAR ram_disk_memory[4096];
+static CHAR ram_disk_memory[TOTAL_SECTORS*SECTOR_SIZE];
 static FX_MEDIA ram_disk;
 
 /* HTTP server stack area. */
