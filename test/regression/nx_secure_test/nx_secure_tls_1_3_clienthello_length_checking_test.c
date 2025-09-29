@@ -97,7 +97,7 @@ static UCHAR client_hello_empty_key_share[] = {
 0x00, 0x02, 0x00, 0x01,
 0x01, /* compression method */
 0x00,
-0x00, 0x41, /* extensions */
+0x00, 0x45, /* extensions */
 0x00, 0x0a, /* ec groups */
 0x00, 0x08,
 0x00, 0x06, 0x00, 0x17, 0x00, 0x18, 0x00, 0x19,
@@ -116,7 +116,10 @@ static UCHAR client_hello_empty_key_share[] = {
 0x04, 0x03, 0x05, 0x03, 0x06, 0x03, 0x04, 0x01, 0x05, 0x01, 0x06, 0x01, 0x03, 0x03, 0x02, 0x03,
 0x02, 0x01, 0x01, 0x01,
 /* empty extension */
-0x00, 0x00, 0x00, 0x00,
+0x00, 0x00, 0x00, 0x00, // ID, length, 2 bytes each
+// List ID length, need at least 2 to make extension_NX_SECURE_TLS_EXTENSION_PRE_SHARED_KEY_LIST_LEN work
+// (needs to store 2-byte List ID Length)
+0x00, 0x00, 0x00, 0x00
 };
 
 static UCHAR client_hello_size[] = {0x00, 0x9e};
@@ -124,6 +127,7 @@ static UCHAR client_hello_size[] = {0x00, 0x9e};
 /* various extension types. */
 static UCHAR extension_NX_SECURE_TLS_EXTENSION_PRE_SHARED_KEY_ZERO[] = {0x00, 0x29, 0x00, 0x00};
 static UCHAR extension_NX_SECURE_TLS_EXTENSION_PRE_SHARED_KEY_MAX_INT[] = {0x00, 0x29, 0xff, 0xff};
+static UCHAR extension_NX_SECURE_TLS_EXTENSION_PRE_SHARED_KEY_LIST_LEN[] = {0x00, 0x29, 0x00, 0x04, 0x00, 0x03};
 static UCHAR extension_NX_SECURE_TLS_EXTENSION_SECURE_RENEGOTIATION_ZERO[] = {0xff, 0x01, 0x00, 0x00};
 static UCHAR extension_NX_SECURE_TLS_EXTENSION_SECURE_RENEGOTIATION_MAX_INT[] = {0xff, 0x01, 0xff, 0xff};
 static UCHAR extension_NX_SECURE_TLS_EXTENSION_SERVER_NAME_INDICATION_MAX_INT[] = {0x00, 0x00, 0xff, 0xff};
@@ -178,6 +182,7 @@ static TEST_POINT test_array[] =
     /* other extension length fields. */
 #ifdef NX_SECURE_ENABLE_PSK_CIPHERSUITES
     {NX_SECURE_TLS_INCORRECT_MESSAGE_LENGTH, 154, extension_NX_SECURE_TLS_EXTENSION_PRE_SHARED_KEY_ZERO, 4},
+    {NX_SECURE_TLS_INCORRECT_MESSAGE_LENGTH, 154, extension_NX_SECURE_TLS_EXTENSION_PRE_SHARED_KEY_LIST_LEN, 6},
 #endif
     {NX_SECURE_TLS_INCORRECT_MESSAGE_LENGTH, 154, extension_NX_SECURE_TLS_EXTENSION_PRE_SHARED_KEY_MAX_INT, 4},
 #ifndef NX_SECURE_TLS_DISABLE_SECURE_RENEGOTIATION
