@@ -6472,7 +6472,7 @@ UINT    version = 0;
         field_name_length = 0;
 
         /* Look for the ':' that separates the field name from its value. */
-        while(*buffer_ptr != ':')
+        while((buffer_ptr < (CHAR *)packet_ptr -> nx_packet_append_ptr) && (*buffer_ptr != ':'))
         {
             buffer_ptr++;
             field_name_length++;
