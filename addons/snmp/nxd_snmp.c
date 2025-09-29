@@ -18586,6 +18586,11 @@ INT         buffer_length;
     /* The buffer pointer is moved by the length. Update buffer size */
     buffer_length -= (INT)length;
 
+    /* GHSA-v474-mv4g-v8cx */
+    if (buffer_length < 2) {
+        return;
+    }
+
     /**** Now we are positioned in front of the security parameters field.  ****/
     if (buffer_length < 2)
     {
