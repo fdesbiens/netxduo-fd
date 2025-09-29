@@ -325,7 +325,8 @@ UINT  _nx_websocket_client_connection_status_callback_set(NX_WEBSOCKET_CLIENT *c
 UINT  _nx_websocket_client_connect_internal(NX_WEBSOCKET_CLIENT *client_ptr,
                                             UCHAR *host, UINT host_length,
                                             UCHAR *uri_path, UINT uri_path_length,
-                                            UCHAR *protocol, UINT protocol_length,UINT wait_option);
+                                            UCHAR *protocol, UINT protocol_length,
+                                            UCHAR *bearer, UINT bearer_length, UINT wait_option);
 UINT  _nx_websocket_client_name_compare(UCHAR *src, ULONG src_length, UCHAR *dest, ULONG dest_length);
 UINT  _nx_websocket_client_connect_response_process(NX_WEBSOCKET_CLIENT *client_ptr, NX_PACKET *packet_ptr);
 UINT  _nx_websocket_client_packet_trim(NX_WEBSOCKET_CLIENT *client_ptr, NX_PACKET **packet_ptr, ULONG trim_size);
