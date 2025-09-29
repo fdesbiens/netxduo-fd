@@ -5811,6 +5811,12 @@ ULONG   temp_lsw = 0;
         index += 4;
     }
 
+    /* Check option length for 4 bytes lsw. */
+    if (index + 4 > option_length)
+    {
+        return(NX_DHCPV6_INVALID_SERVER_DUID);
+    }
+
     /* Yes; Extract the link local address lsw which should be the next 4 bytes.  */
     _nx_dhcpv6_utility_get_data((option_data + index), 4, &temp_lsw);
 
