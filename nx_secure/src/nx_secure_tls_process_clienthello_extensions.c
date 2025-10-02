@@ -1056,6 +1056,13 @@ ULONG  offset;
         return(NX_SECURE_TLS_INCORRECT_MESSAGE_LENGTH);
     }
 
+    /* TLS ProtocolVersion is defined to be a uint16. Thus the list of supported
+    versions must have a length divisible by 2. */
+    if (packet_buffer[0] % 2 != 0)
+    {
+        return(NX_SECURE_TLS_INCORRECT_MESSAGE_LENGTH);
+    }
+
     offset = 1;
 
     /* Loop through all supported versions in this session. */
@@ -1444,7 +1451,8 @@ NX_SECURE_TLS_PSK_STORE *psk_store;
     offset += 2;
 
     /* Make sure the length is reasonable. */
-    if(list_length > extension_length)
+    /* Account for extension_length including the 2-byte list_length field */
+    if(list_length > (extension_length - 2U))
     {
         return(NX_SECURE_TLS_INCORRECT_MESSAGE_LENGTH);
     }

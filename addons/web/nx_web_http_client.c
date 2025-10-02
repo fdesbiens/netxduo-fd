@@ -80,6 +80,7 @@ static NX_WEB_HTTP_CLIENT_STATUS_MAP _nx_web_http_client_status_maps[] =
     {"415",    NX_WEB_HTTP_STATUS_CODE_UNSUPPORTED_MEDIA},
     {"416",    NX_WEB_HTTP_STATUS_CODE_RANGE_NOT_SATISFY},
     {"417",    NX_WEB_HTTP_STATUS_CODE_EXPECTATION_FAILED},
+    {"429",    NX_WEB_HTTP_STATUS_CODE_TOO_MANY_REQUESTS},
     {"500",    NX_WEB_HTTP_STATUS_CODE_INTERNAL_ERROR},
     {"501",    NX_WEB_HTTP_STATUS_CODE_NOT_IMPLEMENTED},
     {"502",    NX_WEB_HTTP_STATUS_CODE_BAD_GATEWAY},
@@ -6472,7 +6473,7 @@ UINT    version = 0;
         field_name_length = 0;
 
         /* Look for the ':' that separates the field name from its value. */
-        while(*buffer_ptr != ':')
+        while((buffer_ptr < (CHAR *)packet_ptr -> nx_packet_append_ptr) && (*buffer_ptr != ':'))
         {
             buffer_ptr++;
             field_name_length++;
