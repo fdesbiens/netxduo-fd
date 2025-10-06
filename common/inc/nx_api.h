@@ -531,7 +531,7 @@ VOID _nx_trace_event_update(TX_TRACE_BUFFER_ENTRY *event, ULONG timestamp, ULONG
 #define NETXDUO_MINOR_VERSION                    4
 #define NETXDUO_PATCH_VERSION                    4
 #define NETXDUO_BUILD_VERSION                    202503
-#define NETXDUO_HOTFIX_VERSION                   ''
+#define NETXDUO_HOTFIX_VERSION                   'a'
 
 /* Define the following symbols for backward compatibility */
 #define EL_PRODUCT_NETXDUO
