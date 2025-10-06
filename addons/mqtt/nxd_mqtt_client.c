@@ -2509,6 +2509,7 @@ UINT       status;
                                              client_ptr -> nxd_mqtt_client_websocket_host, client_ptr -> nxd_mqtt_client_websocket_host_length,
                                              client_ptr -> nxd_mqtt_client_websocket_uri_path, client_ptr -> nxd_mqtt_client_websocket_uri_path_length,
                                              (UCHAR *)NXD_MQTT_OVER_WEBSOCKET_PROTOCOL, sizeof(NXD_MQTT_OVER_WEBSOCKET_PROTOCOL) - 1,
+                                             client_ptr -> nxd_mqtt_client_websocket_bearer, client_ptr -> nxd_mqtt_client_websocket_bearer_length,
                                              NX_NO_WAIT);
 
         if (status != NX_IN_PROGRESS)
@@ -2616,6 +2617,7 @@ UINT       status;
                                                         client_ptr -> nxd_mqtt_client_websocket_host, client_ptr -> nxd_mqtt_client_websocket_host_length,
                                                         client_ptr -> nxd_mqtt_client_websocket_uri_path, client_ptr -> nxd_mqtt_client_websocket_uri_path_length,
                                                         (UCHAR *)NXD_MQTT_OVER_WEBSOCKET_PROTOCOL, sizeof(NXD_MQTT_OVER_WEBSOCKET_PROTOCOL) - 1,
+                                                        client_ptr -> nxd_mqtt_client_websocket_bearer, client_ptr -> nxd_mqtt_client_websocket_bearer_length,
                                                         NX_NO_WAIT);
 
             if (status == NX_IN_PROGRESS)
@@ -4156,6 +4158,7 @@ UINT                 old_priority;
                                                         client_ptr -> nxd_mqtt_client_websocket_host, client_ptr -> nxd_mqtt_client_websocket_host_length,
                                                         client_ptr -> nxd_mqtt_client_websocket_uri_path, client_ptr -> nxd_mqtt_client_websocket_uri_path_length,
                                                         (UCHAR *)NXD_MQTT_OVER_WEBSOCKET_PROTOCOL, sizeof(NXD_MQTT_OVER_WEBSOCKET_PROTOCOL) - 1,
+                                                        client_ptr -> nxd_mqtt_client_websocket_bearer, client_ptr -> nxd_mqtt_client_websocket_bearer_length,
                                                         wait_option);
         }
         else
@@ -4165,6 +4168,7 @@ UINT                 old_priority;
                                                  client_ptr -> nxd_mqtt_client_websocket_host, client_ptr -> nxd_mqtt_client_websocket_host_length,
                                                  client_ptr -> nxd_mqtt_client_websocket_uri_path, client_ptr -> nxd_mqtt_client_websocket_uri_path_length,
                                                  (UCHAR *)NXD_MQTT_OVER_WEBSOCKET_PROTOCOL, sizeof(NXD_MQTT_OVER_WEBSOCKET_PROTOCOL) - 1,
+                                                 client_ptr -> nxd_mqtt_client_websocket_bearer, client_ptr -> nxd_mqtt_client_websocket_bearer_length,
                                                  wait_option);
         }
 
