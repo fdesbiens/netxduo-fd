@@ -63,9 +63,11 @@
 #endif
 
 
-/* Default to little endian, since this is what most ARM targets are.  */
+/* Use compilers define to determine endianness.  */
 
+#ifdef __RX_LITTLE_ENDIAN__
 #define NX_LITTLE_ENDIAN    1
+#endif
 
 
 #include <stdio.h>
