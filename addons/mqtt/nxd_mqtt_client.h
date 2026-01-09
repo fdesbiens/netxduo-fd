@@ -1,5 +1,6 @@
 /***************************************************************************
  * Copyright (c) 2024 Microsoft Corporation 
+ * Copyright (c) 2025-present Eclipse ThreadX Contributors
  * 
  * This program and the accompanying materials are made available under the
  * terms of the MIT License which is available at
@@ -25,7 +26,7 @@
 /*  APPLICATION INTERFACE DEFINITION                       RELEASE        */
 /*                                                                        */
 /*    nxd_mqtt_client.h                                   PORTABLE C      */
-/*                                                           6.3.0        */
+/*                                                           6.4.3        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Yuxin Zhou, Microsoft Corporation                                   */
@@ -391,6 +392,8 @@ typedef struct NXD_MQTT_CLIENT_STRUCT
     UINT                           nxd_mqtt_client_websocket_host_length;
     UCHAR                         *nxd_mqtt_client_websocket_uri_path;
     UINT                           nxd_mqtt_client_websocket_uri_path_length;
+    UCHAR                         *nxd_mqtt_client_websocket_bearer; 
+    UINT                           nxd_mqtt_client_websocket_bearer_length;
 #endif /* NXD_MQTT_OVER_WEBSOCKET */
 } NXD_MQTT_CLIENT;
 
@@ -552,8 +555,8 @@ UINT _nxde_mqtt_client_secure_connect(NXD_MQTT_CLIENT *client_ptr, NXD_ADDRESS *
 #endif /* NX_SECURE_ENABLE */
 
 #ifdef NXD_MQTT_OVER_WEBSOCKET
-UINT _nxd_mqtt_client_websocket_set(NXD_MQTT_CLIENT *client_ptr, UCHAR *host, UINT host_length, UCHAR *uri_path, UINT uri_path_length);
-UINT _nxde_mqtt_client_websocket_set(NXD_MQTT_CLIENT *client_ptr, UCHAR *host, UINT host_length, UCHAR *uri_path, UINT uri_path_length);
+UINT _nxd_mqtt_client_websocket_set(NXD_MQTT_CLIENT *client_ptr, UCHAR *host, UINT host_length, UCHAR *uri_path, UINT uri_path_length, UCHAR *bearer, UINT bearer_length);
+UINT _nxde_mqtt_client_websocket_set(NXD_MQTT_CLIENT *client_ptr, UCHAR *host, UINT host_length, UCHAR *uri_path, UINT uri_path_length, UCHAR *bearer, UINT bearer_length);
 VOID _nxd_mqtt_client_websocket_connection_status_callback(NX_WEBSOCKET_CLIENT *websocket_client_ptr, VOID *context, UINT status);
 #endif /* NXD_MQTT_OVER_WEBSOCKET */
 

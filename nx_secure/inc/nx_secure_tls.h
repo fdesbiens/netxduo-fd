@@ -26,7 +26,7 @@
 /*  COMPONENT DEFINITION                                   RELEASE        */
 /*                                                                        */
 /*    nx_secure_tls.h                                     PORTABLE C      */
-/*                                                           6.4.1        */
+/*                                                           6.4.3        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -179,7 +179,7 @@ extern   "C" {
 #define AZURE_RTOS_NETX_SECURE
 #define NETX_SECURE_MAJOR_VERSION                       6
 #define NETX_SECURE_MINOR_VERSION                       4
-#define NETX_SECURE_PATCH_VERSION                       2
+#define NETX_SECURE_PATCH_VERSION                       3
 
 /* The following symbols are defined for backward compatibility reasons. */
 #define EL_PRODUCT_NETX_SECURE
@@ -528,6 +528,8 @@ typedef struct NX_SECURE_VERSIONS_LIST_STRUCT
 #define TLS_RSA_WITH_AES_256_GCM_SHA384                    0x009D
 #define TLS_PSK_WITH_AES_128_CBC_SHA256                    0x00AE
 #define TLS_PSK_WITH_AES_128_CCM_8                         0xC0A8
+#define TLS_ECDHE_PSK_WITH_AES_128_CBC_SHA				   0xC035
+#define TLS_ECDHE_PSK_WITH_AES_256_CBC_SHA				   0xC036
 
 /* EC Ciphersuites. */
 #define TLS_ECDH_ECDSA_WITH_NULL_SHA                       0xC001

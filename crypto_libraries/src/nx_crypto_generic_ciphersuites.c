@@ -1,5 +1,6 @@
 /***************************************************************************
  * Copyright (c) 2024 Microsoft Corporation 
+ * Copyright (c) 2025-present Eclipse ThreadX Contributors
  * 
  * This program and the accompanying materials are made available under the
  * terms of the MIT License which is available at
@@ -259,6 +260,8 @@ NX_SECURE_TLS_CIPHERSUITE_INFO _nx_crypto_ciphersuite_lookup_table_ecc[] =
 
 #ifdef NX_SECURE_ENABLE_PSK_CIPHERSUITES
     {TLS_PSK_WITH_AES_128_CBC_SHA256,         &crypto_method_null,      &crypto_method_auth_psk,  &crypto_method_aes_cbc_128,     16,      16,        &crypto_method_hmac_sha256,     32,        &crypto_method_tls_prf_sha256},
+	{TLS_ECDHE_PSK_WITH_AES_128_CBC_SHA,      &crypto_method_ecdhe,     &crypto_method_auth_psk,  &crypto_method_aes_cbc_128,     16,      16,        &crypto_method_hmac_sha1,       20,        &crypto_method_tls_prf_sha256},
+	{TLS_ECDHE_PSK_WITH_AES_256_CBC_SHA,      &crypto_method_ecdhe,     &crypto_method_auth_psk,  &crypto_method_aes_cbc_256,     16,      32,        &crypto_method_hmac_sha1,       20,        &crypto_method_tls_prf_sha256},
 #ifdef NX_SECURE_ENABLE_AEAD_CIPHER
     {TLS_PSK_WITH_AES_128_CCM_8,              &crypto_method_null,      &crypto_method_auth_psk,  &crypto_method_aes_ccm_8,       16,      16,        &crypto_method_null,            0,         &crypto_method_tls_prf_sha256},
 #endif

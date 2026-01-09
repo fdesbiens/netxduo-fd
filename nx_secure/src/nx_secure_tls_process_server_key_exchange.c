@@ -1,5 +1,6 @@
 /***************************************************************************
  * Copyright (c) 2024 Microsoft Corporation 
+ * Copyright (c) 2025-present Eclipse ThreadX Contributors
  * 
  * This program and the accompanying materials are made available under the
  * terms of the MIT License which is available at
@@ -29,7 +30,7 @@
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_secure_tls_process_server_key_exchange           PORTABLE C     */
-/*                                                           6.2.0        */
+/*                                                           6.4.3        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -95,6 +96,8 @@ UINT                                  status;
 #if defined(NX_SECURE_ENABLE_PSK_CIPHERSUITES) || defined(NX_SECURE_ENABLE_ECJPAKE_CIPHERSUITE) || \
    (defined(NX_SECURE_ENABLE_ECC_CIPHERSUITE))
 const NX_SECURE_TLS_CIPHERSUITE_INFO *ciphersuite;
+UINT								  auth_algorithm;
+NX_SECURE_TLS_CLIENT_STATE			  client_state;
 #endif /* defined(NX_SECURE_ENABLE_PSK_CIPHERSUITES) || defined(NX_SECURE_ENABLE_ECJPAKE_CIPHERSUITE) */
 
 #if defined(NX_SECURE_ENABLE_PSK_CIPHERSUITES) || defined(NX_SECURE_ENABLE_ECJPAKE_CIPHERSUITE) || \
@@ -114,7 +117,11 @@ const NX_SECURE_TLS_CIPHERSUITE_INFO *ciphersuite;
 
     if (ciphersuite -> nx_secure_tls_public_cipher -> nx_crypto_algorithm == NX_CRYPTO_KEY_EXCHANGE_ECDHE)
     {
-        if (tls_session -> nx_secure_tls_client_state != NX_SECURE_TLS_CLIENT_STATE_SERVER_CERTIFICATE)
+    	auth_algorithm = ciphersuite->nx_secure_tls_public_auth->nx_crypto_algorithm;
+    	client_state = tls_session->nx_secure_tls_client_state;
+
+        if (auth_algorithm != NX_CRYPTO_KEY_EXCHANGE_PSK &&
+        	 client_state != NX_SECURE_TLS_CLIENT_STATE_SERVER_CERTIFICATE)
         {
             return(NX_SECURE_TLS_UNEXPECTED_MESSAGE);
         }

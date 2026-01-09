@@ -1,5 +1,6 @@
 /***************************************************************************
  * Copyright (c) 2024 Microsoft Corporation 
+ * Copyright (c) 2025-present Eclipse ThreadX Contributors
  * 
  * This program and the accompanying materials are made available under the
  * terms of the MIT License which is available at
@@ -54,7 +55,7 @@ static UINT _nx_secure_tls_process_clienthello_psk_extension(NX_SECURE_TLS_SESSI
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_secure_tls_process_clienthello_extensions       PORTABLE C      */
-/*                                                           6.1.9        */
+/*                                                           6.4.3        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -288,7 +289,7 @@ USHORT supported_version = tls_session -> nx_secure_tls_protocol_version;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_secure_tls_proc_clienthello_sec_reneg_extension PORTABLE C      */
-/*                                                           6.1.9        */
+/*                                                           6.4.3        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -444,7 +445,7 @@ INT    compare_value;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_secure_tls_proc_clienthello_sec_sa_extension    PORTABLE C      */
-/*                                                           6.2.1        */
+/*                                                           6.4.3        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -724,7 +725,7 @@ UCHAR expected_signature = 0;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_secure_tls_proc_clienthello_keyshare_extension  PORTABLE C      */
-/*                                                           6.2.0        */
+/*                                                           6.4.3        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -989,7 +990,7 @@ NX_SECURE_TLS_ECC *ecc_info;
 /*                                                                        */
 /*    _nx_secure_tls_proc_clienthello_supported_versions_extension        */
 /*                                                        PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.4.3        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -1055,6 +1056,13 @@ ULONG  offset;
         return(NX_SECURE_TLS_INCORRECT_MESSAGE_LENGTH);
     }
 
+    /* TLS ProtocolVersion is defined to be a uint16. Thus the list of supported
+    versions must have a length divisible by 2. */
+    if (packet_buffer[0] % 2 != 0)
+    {
+        return(NX_SECURE_TLS_INCORRECT_MESSAGE_LENGTH);
+    }
+
     offset = 1;
 
     /* Loop through all supported versions in this session. */
@@ -1083,7 +1091,7 @@ ULONG  offset;
 /*                                                                        */
 /*    _nx_secure_tls_proc_clienthello_signature_algorithms_extension      */
 /*                                                        PORTABLE C      */
-/*                                                           6.1.9        */
+/*                                                           6.4.3        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -1232,7 +1240,7 @@ NX_SECURE_X509_CERT *local_certificate = NX_NULL;
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_secure_tls_get_signature_algorithm_id           PORTABLE C      */
-/*                                                           6.1          */
+/*                                                           6.4.3        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -1314,7 +1322,7 @@ VOID _nx_secure_tls_get_signature_algorithm_id(UINT signature_algorithm, USHORT 
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
 /*    _nx_secure_tls_process_clienthello_psk_extension    PORTABLE C      */
-/*                                                           6.1.8        */
+/*                                                           6.4.3        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Timothy Stapko, Microsoft Corporation                               */
@@ -1443,7 +1451,8 @@ NX_SECURE_TLS_PSK_STORE *psk_store;
     offset += 2;
 
     /* Make sure the length is reasonable. */
-    if(list_length > extension_length)
+    /* Account for extension_length including the 2-byte list_length field */
+    if(list_length > (extension_length - 2U))
     {
         return(NX_SECURE_TLS_INCORRECT_MESSAGE_LENGTH);
     }
