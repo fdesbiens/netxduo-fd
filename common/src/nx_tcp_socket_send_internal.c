@@ -828,6 +828,11 @@ UINT            compute_checksum = 1;
                 {
                     _nx_packet_release(send_packet);
                 }
+                else
+                {
+                    send_packet -> nx_packet_prepend_ptr += sizeof(NX_TCP_HEADER);
+                    send_packet -> nx_packet_length -= sizeof(NX_TCP_HEADER);
+                }
 
                 /* Regain exclusive access to IP instance. */
                 tx_mutex_get(&(ip_ptr -> nx_ip_protection), TX_WAIT_FOREVER);
