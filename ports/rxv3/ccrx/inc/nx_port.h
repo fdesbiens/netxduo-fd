@@ -1,6 +1,5 @@
 /***************************************************************************
  * Copyright (c) 2024 Microsoft Corporation 
- * Copyright (c) 2025-present Eclipse ThreadX Contributors
  * 
  * This program and the accompanying materials are made available under the
  * terms of the MIT License which is available at
@@ -25,8 +24,8 @@
 /*                                                                        */ 
 /*  PORT SPECIFIC C INFORMATION                            RELEASE        */ 
 /*                                                                        */ 
-/*    nx_port.h                                            RXv2/IAR       */ 
-/*                                                          6.1.11        */
+/*    nx_port.h                                           RXv3/CCRX       */ 
+/*                                                           6.2.1        */
 /*                                                                        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -46,6 +45,9 @@
 /*  04-25-2022     Yuxin Zhou               Modified comment(s), and      */
 /*                                            renamed temporary variable, */
 /*                                            resulting in version 6.1.11 */
+/*  03-08-2023     Yajun Xia                Modified comment(s),          */
+/*                                            removed duplicated macros,  */
+/*                                            resulting in version 6.2.1  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -66,7 +68,7 @@
 
 /* Use compilers define to determine endianness.  */
 
-#if __LITTLE_ENDIAN__
+#ifdef __LIT
 #define NX_LITTLE_ENDIAN    1
 #endif
 
@@ -88,7 +90,6 @@
 
 
 /* Define macros that swap the endian for little endian ports.  */
-
 #ifdef NX_LITTLE_ENDIAN
 #define NX_CHANGE_ULONG_ENDIAN(arg)                         \
     {                                                       \
@@ -130,6 +131,7 @@
 #define ntohs(val)  __SWAP16__(val)
 #endif /*htons */
 
+
 #else
 #define NX_CHANGE_ULONG_ENDIAN(a)
 #define NX_CHANGE_USHORT_ENDIAN(a)
@@ -150,6 +152,7 @@
 #define htonl(val) (val)
 #endif /* htonl */
 #endif
+
 
 
 /* Define several macros for the error checking shell in NetX.  */
@@ -206,7 +209,7 @@
 
 #ifdef NX_SYSTEM_INIT
 CHAR                            _nx_version_id[] = 
-                                    "Copyright (c) 2024 Microsoft Corporation.  *  NetX Duo RXv2/IAR Version 6.4.1 *";
+                                    "Copyright (c) 2024 Microsoft Corporation.  *  NetX Duo RXv3/CCRX Version 6.4.1 *";
 #else
 extern  CHAR                    _nx_version_id[];
 #endif

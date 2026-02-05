@@ -64,9 +64,11 @@
 #endif
 
 
-/* Default to little endian, since this is what most ARM targets are.  */
+/* Use compilers define to determine endianness.  */
 
+#ifdef __RX_LITTLE_ENDIAN__
 #define NX_LITTLE_ENDIAN    1
+#endif
 
 
 #include <stdio.h>
@@ -88,44 +90,23 @@
 /* Define macros that swap the endian for little endian ports.  */
 
 #ifdef NX_LITTLE_ENDIAN
-#define NX_CHANGE_ULONG_ENDIAN(arg)                         \
-    {                                                       \
-        ULONG _i;                                           \
-        ULONG _tmp;                                         \
-        _i = (UINT)arg;                                     \
-        /* _i = A, B, C, D */                               \
-        _tmp = _i ^ (((_i) >> 16) | (_i << 16));            \
-        /* _tmp = _i ^ (_i ROR 16) = A^C, B^D, C^A, D^B */  \
-        _tmp &= 0xff00ffff;                                 \
-        /* _tmp = A^C, 0, C^A, D^B */                       \
-        _i = ((_i) >> 8) | (_i<<24);                        \
-        /* _i = D, A, B, C */                               \
-        _i = _i ^ ((_tmp) >> 8);                            \
-        /* _i = D, C, B, A */                               \
-        arg = _i;                                           \
-    }
-#define NX_CHANGE_USHORT_ENDIAN(a)      a = (((a >> 8) | (a << 8)) & 0xFFFF)
-
-
-#define __SWAP32__(val) ((((val) & 0xFF000000) >> 24 ) | (((val) & 0x00FF0000) >> 8) \
-             | (((val) & 0x0000FF00) << 8) | (((val) & 0x000000FF) << 24))
-
-#define __SWAP16__(val) ((((val) & 0xFF00) >> 8) | (((val) & 0x00FF) << 8))
+#define NX_CHANGE_ULONG_ENDIAN(arg)     (arg) = __builtin_bswap32(arg)
+#define NX_CHANGE_USHORT_ENDIAN(arg)    (arg) = __builtin_bswap16(arg)
 
 
 #ifndef htonl
-#define htonl(val)  __SWAP32__(val)
+#define htonl(val)  __builtin_bswap32(val)
 #endif /* htonl */
 #ifndef ntohl
-#define ntohl(val)  __SWAP32__(val)
+#define ntohl(val)  __builtin_bswap32(val)
 #endif /* htonl */
 
 #ifndef htons
-#define htons(val)  __SWAP16__(val)
+#define htons(val)  __builtin_bswap16(val)
 #endif /*htons */
 
 #ifndef ntohs
-#define ntohs(val)  __SWAP16__(val)
+#define ntohs(val)  __builtin_bswap16(val)
 #endif /*htons */
 
 #else
