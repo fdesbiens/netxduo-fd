@@ -97,7 +97,9 @@ UINT                                  status;
    (defined(NX_SECURE_ENABLE_ECC_CIPHERSUITE))
 const NX_SECURE_TLS_CIPHERSUITE_INFO *ciphersuite;
 #if defined(NX_SECURE_ENABLE_ECC_CIPHERSUITE)
+#ifdef NX_SECURE_ENABLE_PSK_CIPHERSUITES
 UINT                                  auth_algorithm;
+#endif
 NX_SECURE_TLS_CLIENT_STATE            client_state;
 #endif /* defined(NX_SECURE_ENABLE_ECC_CIPHERSUITE) */
 #endif /* defined(NX_SECURE_ENABLE_PSK_CIPHERSUITES) || defined(NX_SECURE_ENABLE_ECJPAKE_CIPHERSUITE) || \
@@ -120,11 +122,16 @@ NX_SECURE_TLS_CLIENT_STATE            client_state;
 
     if (ciphersuite -> nx_secure_tls_public_cipher -> nx_crypto_algorithm == NX_CRYPTO_KEY_EXCHANGE_ECDHE)
     {
+#ifdef NX_SECURE_ENABLE_PSK_CIPHERSUITES
     	auth_algorithm = ciphersuite->nx_secure_tls_public_auth->nx_crypto_algorithm;
+#endif
     	client_state = tls_session->nx_secure_tls_client_state;
 
-        if (auth_algorithm != NX_CRYPTO_KEY_EXCHANGE_PSK &&
-        	 client_state != NX_SECURE_TLS_CLIENT_STATE_SERVER_CERTIFICATE)
+        if (
+#ifdef NX_SECURE_ENABLE_PSK_CIPHERSUITES
+            auth_algorithm != NX_CRYPTO_KEY_EXCHANGE_PSK &&
+#endif
+            client_state != NX_SECURE_TLS_CLIENT_STATE_SERVER_CERTIFICATE)
         {
             return(NX_SECURE_TLS_UNEXPECTED_MESSAGE);
         }
