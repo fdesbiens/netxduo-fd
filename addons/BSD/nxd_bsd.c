@@ -8240,7 +8240,12 @@ INT                     ret;
     else
         NX_BSD_FD_ZERO(&suspend_request.nx_bsd_socket_suspend_exception_request_fd_set);
 
-    /* Clear the actual fd sets, which will be set in nx_bsd_select_wakeup(). */
+    /* Clear the actual fd sets, which will be set in nx_bsd_select_wakeup().
+       Separating request filters from actual events prevents the spurious wakeup
+       issue where clearing one event set would leave others stale.
+       Note: All actual sets must be zeroed here as their fd_count contributes to
+       the return value of select(). The suspend_request is on the stack, so
+       users with high NX_BSD_MAX_SOCKETS should monitor stack usage. */
     NX_BSD_FD_ZERO(&suspend_request.nx_bsd_socket_suspend_read_fd_set);
     NX_BSD_FD_ZERO(&suspend_request.nx_bsd_socket_suspend_write_fd_set);
     NX_BSD_FD_ZERO(&suspend_request.nx_bsd_socket_suspend_exception_fd_set);
