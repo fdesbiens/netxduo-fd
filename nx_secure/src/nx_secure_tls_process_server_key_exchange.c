@@ -1,11 +1,11 @@
 /***************************************************************************
- * Copyright (c) 2024 Microsoft Corporation 
+ * Copyright (c) 2024 Microsoft Corporation
  * Copyright (c) 2025-present Eclipse ThreadX Contributors
- * 
+ *
  * This program and the accompanying materials are made available under the
  * terms of the MIT License which is available at
  * https://opensource.org/licenses/MIT.
- * 
+ *
  * SPDX-License-Identifier: MIT
  **************************************************************************/
 
@@ -66,25 +66,6 @@
 /*                                                                        */
 /*    _nx_secure_dtls_client_handshake      DTLS client state machine     */
 /*    _nx_secure_tls_client_handshake       TLS client state machine      */
-/*                                                                        */
-/*  RELEASE HISTORY                                                       */
-/*                                                                        */
-/*    DATE              NAME                      DESCRIPTION             */
-/*                                                                        */
-/*  05-19-2020     Timothy Stapko           Initial Version 6.0           */
-/*  09-30-2020     Timothy Stapko           Modified comment(s), update   */
-/*                                            ECC find curve method,      */
-/*                                            verified memcpy use cases,  */
-/*                                            resulting in version 6.1    */
-/*  04-25-2022     Yuxin Zhou               Modified comment(s),          */
-/*                                            removed unnecessary code,   */
-/*                                            resulting in version 6.1.11 */
-/*  07-29-2022     Yuxin Zhou               Modified comment(s), improved */
-/*                                            buffer length verification, */
-/*                                            resulting in version 6.1.12 */
-/*  10-31-2022     Yanwu Cai                Modified comment(s), added    */
-/*                                            custom secret generation,   */
-/*                                            resulting in version 6.2.0  */
 /*                                                                        */
 /**************************************************************************/
 UINT _nx_secure_tls_process_server_key_exchange(NX_SECURE_TLS_SESSION *tls_session,
